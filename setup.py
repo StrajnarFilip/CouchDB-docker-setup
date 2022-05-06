@@ -41,5 +41,6 @@ with open("docker-compose.yaml","w",encoding='utf-8') as file:
 
 print("You can start the script with: docker-compose up -d")
 print("You can visit admin panel on: http://127.0.0.1:5984/_utils/")
+print("You can safely visit admin panel with HTTPS on: https://127.0.0.1:6984/_utils/")
 print(f"Admin password is: {safe_root_random}")
 print(f"You can find the password at any time by looking at generated docker-compose.yaml")
