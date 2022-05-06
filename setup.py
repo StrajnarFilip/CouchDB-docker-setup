@@ -21,15 +21,17 @@ def render(safe_root_password: str) -> str:
     return f"""version: '3.0'
 services:
   couchdb:
-    image: couchdb
+    build: "."
     restart: "always"
     volumes:
       - "./couchdb-data:/opt/couchdb/data"
     ports:
       ## Host locally:
       #- "5984:5984"
+      #- "6984:6984"
       ## Or publicly:
       - "0.0.0.0:5984:5984"
+      - "0.0.0.0:6984:6984"
     environment:
       COUCHDB_USER: admin
       COUCHDB_PASSWORD: {safe_root_password}"""
