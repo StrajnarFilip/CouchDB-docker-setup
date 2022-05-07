@@ -73,7 +73,7 @@ if ! test -f "/cert/certificate.pem" ; then #
     IP.1 = 127.0.0.1' > config.file #
 
     openssl req -x509 -days 100000 -extensions cert_ext -out /cert/certificate.pem -config config.file #
-    cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem ; fi #
+    cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem ; fi ; #
 
 echo '[ssl]
     enable = true
