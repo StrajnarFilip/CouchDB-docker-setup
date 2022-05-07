@@ -44,8 +44,7 @@ def render_certificate_config()->str:
   return f"""#!/bin/sh
 cd /opt/couchdb/etc #
 # only generate certificate, if it doesn't exist already
-if ! test -f "certificate.pem" # 
-then #
+if ! test -f "certificate.pem" ; then #
     echo ' [ req ]
     default_bits           = 4096
     default_keyfile        = private-key.pem
