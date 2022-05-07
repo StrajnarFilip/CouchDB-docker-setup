@@ -63,9 +63,15 @@ echo ' [ req ]
  emailAddress           = self@signed.com
 
  [ req_attributes ]
- challengePassword              = A challenge password' > config.file
+ challengePassword              = A challenge password
+ [ cert_ext ]
+ subjectAltName = @alt_names
 
-openssl req -x509 -days 100000 -out certificate.pem -config config.file
+ [ alt_names ]
+ DNS.1 = localhost
+ IP.1 = 127.0.0.1' > config.file
+
+openssl req -x509 -days 100000 -extensions cert_ext -out certificate.pem -config config.file
 
 echo '[ssl]
 enable = true
