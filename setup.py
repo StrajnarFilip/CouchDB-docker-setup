@@ -78,8 +78,7 @@ if ! test -f "/cert/certificate.pem" ; then #
     enable = true
     cert_file = /opt/couchdb/etc/certificate.pem
     key_file = /opt/couchdb/etc/private-key.pem
-    password = selfsigned' > ./local.d/ssl.ini #
-fi #
+    password = selfsigned' > ./local.d/ssl.ini ; fi #
 
 cp /opt/couchdb/etc/certificate.pem /cert/certificate.pem #
 cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem #
