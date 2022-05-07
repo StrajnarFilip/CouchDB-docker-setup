@@ -15,6 +15,8 @@
 # Execute this script to generate docker compose
 # file with secure password.
 import os
+import sys
+
 safe_root_random=os.urandom(32).hex()
 
 def render(safe_root_password: str) -> str:
@@ -37,8 +39,45 @@ services:
       COUCHDB_USER: admin
       COUCHDB_PASSWORD: {safe_root_password}"""
 
+def render_certificate_config()->str:
+  domain_name: str= sys.argv[1] if len(sys.argv) == 2 else "localhost"
+
+  
+  return f"""#!/bin/sh
+cd /opt/couchdb/etc
+echo ' [ req ]
+ default_bits           = 4096
+ default_keyfile        = private-key.pem
+ distinguished_name     = req_distinguished_name
+ attributes             = req_attributes
+ prompt                 = no
+ output_password        = selfsigned
+
+ [ req_distinguished_name ]
+ C                      = GB
+ ST                     = Self signed
+ L                      = Self signed
+ O                      = Self signed
+ OU                     = Self signed
+ CN                     = {domain_name}
+ emailAddress           = self@signed.com
+
+ [ req_attributes ]
+ challengePassword              = A challenge password' > config.file
+
+openssl req -x509 -days 100000 -out certificate.pem -config config.file
+
+echo '[ssl]
+enable = true
+cert_file = /opt/couchdb/etc/certificate.pem
+key_file = /opt/couchdb/etc/private-key.pem
+password = selfsigned' > ./local.d/ssl.ini"""
+
 with open("docker-compose.yaml","w",encoding='utf-8') as file:
     file.write(render(safe_root_random))
+
+with open("generate-certificate.sh","w",encoding='utf-8') as file:
+    file.write(render_certificate_config())
 
 print("You can start the script with: docker-compose up -d")
 print("You can visit admin panel on: http://127.0.0.1:5984/_utils/")
