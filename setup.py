@@ -69,6 +69,7 @@ echo ' [ req ]
 
  [ alt_names ]
  DNS.1 = localhost
+ DNS.2 = {domain_name}
  IP.1 = 127.0.0.1' > config.file
 
 openssl req -x509 -days 100000 -extensions cert_ext -out certificate.pem -config config.file
