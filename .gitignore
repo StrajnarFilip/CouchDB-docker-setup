@@ -1,3 +1,5 @@
 couchdb-data
 docker-compose.yaml
 cert
+generate-certificate.sh
+ssl-entrypoint.sh

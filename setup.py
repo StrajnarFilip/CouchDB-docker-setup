@@ -40,50 +40,57 @@ services:
       COUCHDB_PASSWORD: {safe_root_password}"""
 
 def render_certificate_config()->str:
-  domain_name: str= sys.argv[1] if len(sys.argv) == 2 else "localhost"
-
-  
+  domain_name: str= sys.argv[1] if len(sys.argv) == 2 else "localhost"  
   return f"""#!/bin/sh
 cd /opt/couchdb/etc
-echo ' [ req ]
- default_bits           = 4096
- default_keyfile        = private-key.pem
- distinguished_name     = req_distinguished_name
- attributes             = req_attributes
- prompt                 = no
- output_password        = selfsigned
+# only generate certificate, if it doesn't exist already
+if ! test -f "certificate.pem"
+then
+    echo ' [ req ]
+    default_bits           = 4096
+    default_keyfile        = private-key.pem
+    distinguished_name     = req_distinguished_name
+    attributes             = req_attributes
+    prompt                 = no
+    output_password        = selfsigned
 
- [ req_distinguished_name ]
- C                      = GB
- ST                     = Self signed
- L                      = Self signed
- O                      = Self signed
- OU                     = Self signed
- CN                     = {domain_name}
- emailAddress           = self@signed.com
+    [ req_distinguished_name ]
+    C                      = GB
+    ST                     = Self signed
+    L                      = Self signed
+    O                      = Self signed
+    OU                     = Self signed
+    CN                     = {domain_name}
+    emailAddress           = self@signed.com
 
- [ req_attributes ]
- challengePassword              = A challenge password
- [ cert_ext ]
- subjectAltName = @alt_names
+    [ req_attributes ]
+    challengePassword              = A challenge password
+    [ cert_ext ]
+    subjectAltName = @alt_names
 
- [ alt_names ]
- DNS.1 = localhost
- DNS.2 = {domain_name}
- IP.1 = 127.0.0.1' > config.file
+    [ alt_names ]
+    DNS.1 = {domain_name}
+    DNS.2 = localhost
+    IP.1 = 127.0.0.1' > config.file
 
-openssl req -x509 -days 100000 -extensions cert_ext -out certificate.pem -config config.file
+    openssl req -x509 -days 100000 -extensions cert_ext -out certificate.pem -config config.file
 
-echo '[ssl]
-enable = true
-cert_file = /opt/couchdb/etc/certificate.pem
-key_file = /opt/couchdb/etc/private-key.pem
-password = selfsigned' > ./local.d/ssl.ini"""
+    echo '[ssl]
+    enable = true
+    cert_file = /opt/couchdb/etc/certificate.pem
+    key_file = /opt/couchdb/etc/private-key.pem
+    password = selfsigned' > ./local.d/ssl.ini
+fi
+
+cp /opt/couchdb/etc/certificate.pem /cert/certificate.pem
+cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem
+tini -- "/docker-entrypoint.sh" "/opt/couchdb/bin/couchdb"
+"""
 
 with open("docker-compose.yaml","w",encoding='utf-8') as file:
     file.write(render(safe_root_random))
 
-with open("generate-certificate.sh","w",encoding='utf-8') as file:
+with open("ssl-entrypoint.sh","w",encoding='utf-8') as file:
     file.write(render_certificate_config())
 
 print("You can start the script with: docker-compose up -d")
