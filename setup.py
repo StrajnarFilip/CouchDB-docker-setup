@@ -75,6 +75,7 @@ if ! test -f "/cert/certificate.pem" ; then #
     openssl req -x509 -days 100000 -extensions cert_ext -out /cert/certificate.pem -config config.file #
     cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem ; fi ; #
 
+echo "Writing ssl.ini" #
 echo '[ssl]
     enable = true
     cert_file = /cert/certificate.pem
