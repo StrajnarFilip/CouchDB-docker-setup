@@ -80,6 +80,7 @@ echo '[ssl]
     cert_file = /cert/certificate.pem
     key_file = /cert/private-key.pem
     password = selfsigned' > /opt/couchdb/etc/local.d/ssl.ini #
+echo "Starting DB:" #
 tini -- "/docker-entrypoint.sh" "/opt/couchdb/bin/couchdb" #
 """
 
