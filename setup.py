@@ -42,10 +42,10 @@ services:
 def render_certificate_config()->str:
   domain_name: str= sys.argv[1] if len(sys.argv) == 2 else "localhost"  
   return f"""#!/bin/sh
-cd /opt/couchdb/etc
+cd /opt/couchdb/etc #
 # only generate certificate, if it doesn't exist already
-if ! test -f "certificate.pem"
-then
+if ! test -f "certificate.pem" # 
+then #
     echo ' [ req ]
     default_bits           = 4096
     default_keyfile        = private-key.pem
@@ -71,23 +71,23 @@ then
     [ alt_names ]
     DNS.1 = {domain_name}
     DNS.2 = localhost
-    IP.1 = 127.0.0.1' > config.file
+    IP.1 = 127.0.0.1' > config.file #
 
-    openssl req -x509 -days 100000 -extensions cert_ext -out certificate.pem -config config.file
+    openssl req -x509 -days 100000 -extensions cert_ext -out certificate.pem -config config.file #
 
     echo '[ssl]
     enable = true
     cert_file = /opt/couchdb/etc/certificate.pem
     key_file = /opt/couchdb/etc/private-key.pem
-    password = selfsigned' > ./local.d/ssl.ini
-fi
+    password = selfsigned' > ./local.d/ssl.ini #
+fi #
 
-cp /opt/couchdb/etc/certificate.pem /cert/certificate.pem
-cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem
-tini -- "/docker-entrypoint.sh" "/opt/couchdb/bin/couchdb"
+cp /opt/couchdb/etc/certificate.pem /cert/certificate.pem #
+cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem #
+tini -- "/docker-entrypoint.sh" "/opt/couchdb/bin/couchdb" #
 """
 
-with open("docker-compose.yaml","w",encoding='utf-8') as file:
+with open("docker-compose.yaml","w",encoding='utf-8',newline='\n') as file:
     file.write(render(safe_root_random))
 
 with open("ssl-entrypoint.sh","w",encoding='utf-8') as file:
