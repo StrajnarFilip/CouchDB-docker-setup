@@ -79,7 +79,7 @@ echo '[ssl]
     enable = true
     cert_file = /cert/certificate.pem
     key_file = /cert/private-key.pem
-    password = selfsigned' > ./local.d/ssl.ini #
+    password = selfsigned' > /opt/couchdb/etc/local.d/ssl.ini #
 tini -- "/docker-entrypoint.sh" "/opt/couchdb/bin/couchdb" #
 """
 
