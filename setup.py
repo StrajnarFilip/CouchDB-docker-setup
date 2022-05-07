@@ -72,16 +72,15 @@ if ! test -f "/cert/certificate.pem" ; then #
     DNS.2 = localhost
     IP.1 = 127.0.0.1' > config.file #
 
-    openssl req -x509 -days 100000 -extensions cert_ext -out certificate.pem -config config.file #
-
+    openssl req -x509 -days 100000 -extensions cert_ext -out /cert/certificate.pem -config config.file #
+    cp /opt/couchdb/etc/certificate.pem /cert/certificate.pem #
+    cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem #
     echo '[ssl]
     enable = true
-    cert_file = /opt/couchdb/etc/certificate.pem
-    key_file = /opt/couchdb/etc/private-key.pem
+    cert_file = /cert/certificate.pem
+    key_file = /cert/private-key.pem
     password = selfsigned' > ./local.d/ssl.ini ; fi #
 
-cp /opt/couchdb/etc/certificate.pem /cert/certificate.pem #
-cp /opt/couchdb/etc/private-key.pem /cert/private-key.pem #
 tini -- "/docker-entrypoint.sh" "/opt/couchdb/bin/couchdb" #
 """
 
