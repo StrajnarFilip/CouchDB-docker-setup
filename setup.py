@@ -86,7 +86,7 @@ tini -- "/docker-entrypoint.sh" "/opt/couchdb/bin/couchdb" #
 with open("docker-compose.yaml","w",encoding='utf-8',newline='\n') as file:
     file.write(render(safe_root_random))
 
-with open("ssl-entrypoint.sh","w",encoding='utf-8') as file:
+with open("ssl-entrypoint.sh","w",encoding='utf-8',newline='\n') as file:
     file.write(render_certificate_config())
 
 print("You can start the script with: docker-compose up -d")
