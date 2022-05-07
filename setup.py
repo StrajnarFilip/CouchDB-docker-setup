@@ -25,6 +25,7 @@ services:
     restart: "always"
     volumes:
       - "./couchdb-data:/opt/couchdb/data"
+      - "./cert:/cert"
     ports:
       ## Host locally:
       #- "5984:5984"

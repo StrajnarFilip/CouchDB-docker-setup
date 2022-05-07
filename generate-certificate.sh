@@ -20,7 +20,7 @@ echo ' [ req ]
  [ req_attributes ]
  challengePassword              = A challenge password' > config.file
 
-openssl req -x509 -out certificate.pem -config config.file
+openssl req -x509 -days 100000 -out certificate.pem -config config.file
 
 echo '[ssl]
 enable = true
